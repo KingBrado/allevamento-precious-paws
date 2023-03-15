@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AboutUs from "./components/AboutUs";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import NewPost from "./components/NewPost";
+import OurCats from "./components/OurCats";
+import Kittens from "./components/Kittens";
+import PostPage from "./components/PostPage";
+import PrivateRoute from "./components/PrivateRoute";
+import NewFriend from "./components/NewFriend";
+import ForgottenPassword from "./components/ForgottenPassword"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/our-friends" element={<OurCats collectionName={"friends"}/>} />
+        <Route path="/kittens" element={<Kittens collectionName={"kittens"}/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgottenPassword />} />
+        <Route path="/new-post" element={
+          <PrivateRoute><NewPost/></PrivateRoute>
+        }/>
+        <Route path="/new-friend" element={
+          <PrivateRoute><NewFriend collectionName={'friends'}/></PrivateRoute>
+        }/>
+        <Route path="/new-kitten" element={
+          <PrivateRoute><NewFriend collectionName={'kittens'}/></PrivateRoute>
+        }/>
+        <Route path="/posts/:postId" element={<PostPage />}/> {/*For debug only*/}
+      </Routes>
+    </Router>
   );
 }
 
