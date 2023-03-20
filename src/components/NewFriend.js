@@ -83,7 +83,7 @@ export default function NewFriend({ collectionName }) {
       className="d-flex justify-content-center align-items-center"
       style={{ minHeight: "100vh" }}
     >
-      <form style={{ minWidth: "400px" }} onSubmit={handleSubmit}>
+      <form style={{ minWidth: "300px" }} onSubmit={handleSubmit}>
         {error && (
           <div class="alert alert-danger" role="alert">
             {error}
