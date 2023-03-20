@@ -26,7 +26,7 @@ export default function Footer() {
           <div className="col-xs-12 col-md-4 text-center">
             <h4>Contatti</h4>
             <p>
-              Manzi Patrizia: +393462255109 <br />
+              Manzi Patrizia: +393273668708 <br />
               allevamentoprecious.paws@yahoo.com
             </p>
           </div>
@@ -65,17 +65,17 @@ export default function Footer() {
                 Login
               </Link>
             )}
-            {user ? (
+            {/* {user ? (
               <p>
                 <Link className="text-secondary" to="/new-post">
                   Nuovo Post
                 </Link>
               </p>
-            ) : null}
+            ) : null} */}
           </div>
         </div>
         <div className="row" style={{ paddingBottom: "0.2rem" }}>
-          <div className="col text-center">&copy; 2021 DoktorPumpkin</div>
+          <div className="col text-center">&copy;2023 DoktorPumpkin</div>
         </div>
       </div>
     </footer>

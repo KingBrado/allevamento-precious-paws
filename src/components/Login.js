@@ -41,9 +41,9 @@ export default function Login() {
   return (
     <div
       className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: "100vh"}}
     >
-      <form style={{ minWidth: "400px" }} onSubmit={handleSubmit}>
+      <form style={{ minWidth: "400px", maxWidth: "80%" }} onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="email" style={cardBody}>
             Email
