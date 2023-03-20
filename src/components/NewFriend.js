@@ -40,7 +40,7 @@ export default function NewFriend({ collectionName }) {
     let file = e.target.files[0];
     setInputs({
       ...inputs,
-      ["friendImage"]: `${collectionName}/${file.name}`,
+      "friendImage": `${collectionName}/${file.name}`,
     });
     setImage(file);
   };
@@ -165,7 +165,7 @@ export default function NewFriend({ collectionName }) {
             className="form-control input-lg"
             id="friendDescription"
             rows="5"
-            cols="50"
+            cols="30"
             placeholder="Descrizione"
             onChange={handleDescriptionChange}
           />
