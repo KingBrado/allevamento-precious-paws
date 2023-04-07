@@ -38,6 +38,14 @@ export const buttonStyle = {
   color: "white",
 };
 
+export const smallButtonStyle = {
+  backgroundColor: "#74877a",
+  fontFamily: "Indie Flower, cursive",
+  textAlign: "center",
+  fontSize: "1.3rem",
+  color: "white",
+};
+
 export const buttonReverseStyle = {
   backgroundColor: "white",
   fontFamily: "Indie Flower, cursive",
@@ -55,5 +63,13 @@ export const subSectionHeader = {
 
 export const darkLinkStyle = {
   textDecoration: "none",
+  color: "#74877a",
+};
+
+export const lessRecentLink = {
+  fontFamily: "Indie Flower, cursive",
+  textAlign: "center",
+  fontSize: "1.5rem",
+  padding: "1rem",
   color: "#74877a",
 };

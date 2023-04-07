@@ -65,13 +65,13 @@ export default function Footer() {
                 Login
               </Link>
             )}
-            {/* {user ? (
+            {user ? (
               <p>
                 <Link className="text-secondary" to="/new-post">
                   Nuovo Post
                 </Link>
               </p>
-            ) : null} */}
+            ) : null}
           </div>
         </div>
         <div className="row" style={{ paddingBottom: "0.2rem" }}>

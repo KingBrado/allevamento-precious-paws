@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import Video from "../resources/video_gatto_blog.mp4";
 import Logo from "../resources/precious_paws_logo.jpg";
-import { sectionHeader, subSectionLink, cardBody } from "./styles";
+import { sectionHeader, subSectionLink, cardBody, lessRecentLink } from "./styles";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -40,33 +40,31 @@ export default function Home() {
       <div className="container">
         <h1 style={sectionHeader}>News</h1>
         <div className="row justify-center">
-          {posts &&
-            posts.map((post) => {
-              return (
-                <div className="col-lg-6 col-sm-12" key={post.id}>
-                  <div className="card mt-4">
-                    <div className="card-body text-center">
-                      <Link
-                        to={"/posts/" + post.id}
-                        className="card-title"
-                        style={subSectionLink}
-                      >
-                        {post.data().title}
-                      </Link>
-                      <p style={cardBody} className="card-text">
-                        {post.data().content[0].content.split(" ").length > 10
-                          ? post
-                              .data()
-                              .content[0].content.split(" ")
-                              .slice(0, 10)
-                              .join(" ") + "..."
-                          : post.data().content[0].content}
-                      </p>
-                    </div>
-                  </div>
+          {posts.length > 0 && (
+            <div className="col-lg-6 mx-auto text-center" key={posts[0].id}>
+              <div className="card mt-4 mb-4">
+                <div className="card-body text-center">
+                  <Link
+                    to={"/posts/" + posts[0].id}
+                    className="card-title"
+                    style={subSectionLink}
+                  >
+                    {posts[0].data().title}
+                  </Link>
+                  <p style={cardBody} className="card-text">
+                    {posts[0].data().items[0].content.split(" ").length > 10
+                      ? posts[0]
+                          .data()
+                          .items[0].content.split(" ")
+                          .slice(0, 10)
+                          .join(" ") + "..."
+                      : posts[0].data().items[0].content}
+                  </p>
                 </div>
-              );
-            })}
+              </div>
+              <Link to={"/posts/"} style={lessRecentLink}>Post meno recenti</Link>
+            </div>
+          )}
         </div>
       </div>
 

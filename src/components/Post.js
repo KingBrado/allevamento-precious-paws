@@ -14,7 +14,7 @@ export default function Post({ postId }) {
     getDoc(doc(db, "posts", postId))
       .then((doc) => {
         setTitle(doc.data().title);
-        setItems(doc.data().content);
+        setItems(doc.data().items);
         setLoading(false);
       })
       .catch((error) => console.log(error))
@@ -29,7 +29,7 @@ export default function Post({ postId }) {
               <h1 style={sectionHeader}>{title}</h1>
               <div className="row justify-center">
                 {items.map((item, id) => {
-                  return <PostItem key={id} content={item} />;
+                  return <PostItem key={id} item={item} />;
                 })}
               </div>
             </div>

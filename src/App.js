@@ -8,7 +8,8 @@ import Kittens from "./components/Kittens";
 import PostPage from "./components/PostPage";
 import PrivateRoute from "./components/PrivateRoute";
 import NewFriend from "./components/NewFriend";
-import ForgottenPassword from "./components/ForgottenPassword"
+import ForgottenPassword from "./components/ForgottenPassword";
+import PostsPage from "./components/PostsPage";
 
 function App() {
   return (
@@ -29,7 +30,8 @@ function App() {
         <Route path="/new-kitten" element={
           <PrivateRoute><NewFriend collectionName={'kittens'}/></PrivateRoute>
         }/>
-        <Route path="/posts/:postId" element={<PostPage />}/> {/*For debug only*/}
+        <Route path="/posts/:postId" element={<PostPage />}/>
+        <Route exact path="/posts/" element={<PostsPage />}/>
       </Routes>
     </Router>
   );
