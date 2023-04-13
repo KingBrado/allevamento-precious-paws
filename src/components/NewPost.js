@@ -15,14 +15,15 @@ export default function NewPost() {
   const [title, setTitle] = useState("");
   const [items, setItems] = useState([{ content: "", type: "text" }]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const uploadImage = async (image) =>  {
+  const uploadImage = async (image) => {
     const storageRef = ref(storage, `/posts/${image.content.name}`);
-  
+
     const response = await uploadBytes(storageRef, image.content);
     const url = await getDownloadURL(response.ref);
     return url;
-  }
+  };
 
   const handleCancel = (e) => {
     e.preventDefault();
@@ -49,7 +50,7 @@ export default function NewPost() {
     let newItems = [...items];
     newItems[i].content = e.target.value;
     setItems(newItems);
-  }
+  };
   const handleImageChange = (e, i) => {
     e.preventDefault();
     let newItems = [...items];
@@ -59,13 +60,14 @@ export default function NewPost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       setError("");
       const imagePromises = Array.from(items, (item) => {
-        if (item.type === 'image') {
-          return uploadImage(item)
+        if (item.type === "image") {
+          return uploadImage(item);
         }
-        return null
+        return null;
       });
       const imageRes = await Promise.all(imagePromises);
       let newItems = items.map((item, i) => {
@@ -77,13 +79,14 @@ export default function NewPost() {
       let newPost = {
         title: title,
         items: newItems,
-        created: Timestamp.now()
+        created: Timestamp.now(),
       };
       await addDoc(collection(db, "posts"), newPost);
       navigate(-1);
     } catch {
       setError("Errore nel salvare il post");
     }
+    setLoading(false);
   };
   return (
     <div
@@ -148,6 +151,7 @@ export default function NewPost() {
             className="btn mt-5"
             style={smallButtonStyle}
             onClick={addText}
+            disabled={loading}
           >
             Aggiungi Paragrafo
           </button>
@@ -156,11 +160,17 @@ export default function NewPost() {
             className="btn mt-5 ms-3"
             style={smallButtonStyle}
             onClick={addImage}
+            disabled={loading}
           >
             Aggiungi Immagine
           </button>
         </div>
-        <button type="submit" className="btn mt-5" style={buttonStyle}>
+        <button
+          type="submit"
+          className="btn mt-5"
+          style={buttonStyle}
+          disabled={loading}
+        >
           Conferma
         </button>
         <button
@@ -168,6 +178,7 @@ export default function NewPost() {
           className="btn mt-5 ms-3"
           onClick={handleCancel}
           style={buttonReverseStyle}
+          disabled={loading}
         >
           Annulla
         </button>

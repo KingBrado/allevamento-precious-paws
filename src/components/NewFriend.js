@@ -18,6 +18,7 @@ export default function NewFriend({ collectionName }) {
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleCancel = (e) => {
     e.preventDefault();
@@ -40,7 +41,7 @@ export default function NewFriend({ collectionName }) {
     let file = e.target.files[0];
     setInputs({
       ...inputs,
-      "friendImage": `${collectionName}/${file.name}`,
+      friendImage: `${collectionName}/${file.name}`,
     });
     setImage(file);
   };
@@ -52,6 +53,7 @@ export default function NewFriend({ collectionName }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const storageRef = ref(storage, `${collectionName}/${image.name}`);
     try {
       await uploadBytes(storageRef, image);
@@ -67,7 +69,7 @@ export default function NewFriend({ collectionName }) {
         colour: inputs["friendColour"],
         pedigree: inputs["friendPedigree"],
         description: description,
-        created: Timestamp.now()
+        created: Timestamp.now(),
       };
       await getDownloadURL(storageRef).then((url) => {
         newFriend.image = url;
@@ -77,6 +79,7 @@ export default function NewFriend({ collectionName }) {
     } catch {
       setError("Errore nel salvare l'amico");
     }
+    setLoading(false);
   };
   return (
     <div
@@ -170,7 +173,12 @@ export default function NewFriend({ collectionName }) {
             onChange={handleDescriptionChange}
           />
         </div>
-        <button type="submit" className="btn mt-3" style={buttonStyle}>
+        <button
+          type="submit"
+          className="btn mt-3"
+          style={buttonStyle}
+          disabled={loading}
+        >
           Conferma
         </button>
         <button
@@ -178,6 +186,7 @@ export default function NewFriend({ collectionName }) {
           className="btn mt-3 ms-3"
           onClick={handleCancel}
           style={buttonReverseStyle}
+          disabled={loading}
         >
           Annulla
         </button>

@@ -33,7 +33,7 @@ export default function AboutUs() {
               qualcosa di più con questa meravigliosa razza di cui ci siamo
               innamorati. Abbiamo scelto ogni cucciolo da allevamenti seri e li
               abbiamo seguiti fin da piccoli, dalla crescita al loro arrivo.
-              Abbiamo due splendidi bambini a cui abbiamo insegnato ad amare e
+              Abbiamo tre splendidi bambini a cui abbiamo insegnato ad amare e
               rispettare gli animali, tutti gli animali e i nostri gatti
               crescono e vivono in mezzo a noi, giocano con i bambini, ricevono
               coccole, dormono in giro sul divano comodo o sui loro cuscinoni.
