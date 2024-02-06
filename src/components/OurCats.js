@@ -16,7 +16,6 @@ import { db } from "../firebase";
 export default function OurCats() {
   const [friendsDesc, setFriendsDesc] = useState([]);
   const [user, setUser] = useState(false);
-  const [confirm, setConfirm] = useState(false);
   const auth = getAuth();
 
   onAuthStateChanged(auth, (user) => {

@@ -43,7 +43,7 @@ export default function EditFriend(collectionName) {
         setLoading(false);
       })
       .catch((error) => console.log(error));
-  }, [params.editId]);
+  }, [params.editId, collectionName]);
 
   const handleCancel = (e) => {
     e.preventDefault();
