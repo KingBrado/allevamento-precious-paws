@@ -86,6 +86,7 @@ export default function EditFriend(collectionName) {
         colour: inputs["friendColour"],
         race: inputs["friendRace"],
         pedigree: inputs["friendPedigree"],
+        description: description,
         modified: Timestamp.now(),
       });
       navigate(-1);
