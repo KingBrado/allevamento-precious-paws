@@ -3,6 +3,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import {
   buttonStyle,
+  smallButtonStyle,
   sectionHeader,
   subSectionHeader,
   sectionBody,
@@ -15,15 +16,18 @@ import { db } from "../firebase";
 export default function OurCats() {
   const [friendsDesc, setFriendsDesc] = useState([]);
   const [user, setUser] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const auth = getAuth();
+
   onAuthStateChanged(auth, (user) => {
     setUser(user);
   });
 
   useEffect(() => {
-    getDocs(query(collection(db, 'friends'), orderBy("created"))).then(
+
+    getDocs(query(collection(db, "friends"), orderBy("created"))).then(
       async (querySnapshot) => {
-        let p = querySnapshot.docs.map((doc) => doc)
+        let p = querySnapshot.docs.map((doc) => doc);
         setFriendsDesc(p);
       }
     );
@@ -40,7 +44,10 @@ export default function OurCats() {
               {friendsDesc &&
                 friendsDesc.map((friend) => {
                   return (
-                    <div className="col-lg-10 col-sm-12 m-auto text-center" key={friend.id}>
+                    <div
+                      className="col-lg-10 col-sm-12 m-auto text-center"
+                      key={friend.id}
+                    >
                       <h3 style={subSectionHeader}>{friend.data().title}</h3>
                       <img
                         className="d-block img-fluid mx-auto w-75"
@@ -58,6 +65,15 @@ export default function OurCats() {
                         <br />
                       </p>
                       <p style={sectionBody}>{friend.data().description}</p>
+                      {user ? (
+                        <Link
+                          to={"/edit-friend/" + friend.id}
+                          className="btn mb-5"
+                          style={smallButtonStyle}
+                        >
+                          Modifica
+                        </Link>
+                      ) : null}
                     </div>
                   );
                 })}

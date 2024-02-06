@@ -10,6 +10,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import NewFriend from "./components/NewFriend";
 import ForgottenPassword from "./components/ForgottenPassword";
 import PostsPage from "./components/PostsPage";
+import EditFriend from "./components/EditFriend";
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
         }/>
         <Route path="/new-friend" element={
           <PrivateRoute><NewFriend collectionName={'friends'}/></PrivateRoute>
+        }/>
+        <Route path="/edit-friend/:editId" element={
+          <PrivateRoute><EditFriend collectionName={'friends'}/></PrivateRoute>
         }/>
         <Route path="/new-kitten" element={
           <PrivateRoute><NewFriend collectionName={'kittens'}/></PrivateRoute>

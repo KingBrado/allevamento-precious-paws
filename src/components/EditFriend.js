@@ -1,11 +1,18 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
-import { buttonReverseStyle, buttonStyle, cardBody } from "./styles";
-import { storage, db } from "../firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { deleteDoc, doc, getDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { getStorage, ref, deleteObject } from "firebase/storage";
+import { db } from "../firebase";
+import {
+  cardBody,
+  buttonStyle,
+  buttonReverseStyle,
+  dangerButtonStyle,
+} from "./styles";
+import Modal from "./Modal";
 
-export default function NewFriend({ collectionName }) {
+export default function EditFriend(collectionName) {
+  const params = useParams();
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({
     friendTitle: "",
@@ -19,6 +26,24 @@ export default function NewFriend({ collectionName }) {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    getDoc(doc(db, collectionName.collectionName, params.editId))
+      .then((doc) => {
+        setInputs({
+          friendTitle: doc.data().title,
+          friendImage: doc.data().image,
+          friendName: doc.data().name,
+          friendRace: doc.data().race,
+          friendColour: doc.data().colour,
+          friendPedigree: doc.data().pedigree,
+        });
+        setDescription(doc.data().description);
+        setLoading(false);
+      })
+      .catch((error) => console.log(error));
+  }, [params.editId]);
 
   const handleCancel = (e) => {
     e.preventDefault();
@@ -54,32 +79,36 @@ export default function NewFriend({ collectionName }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const storageRef = ref(storage, `${collectionName}/${image.name}`);
     try {
-      await uploadBytes(storageRef, image);
-    } catch {
-      setError("Errore nel caricare l'immagine");
-      return;
-    }
-    try {
-      let newFriend = {
+      await updateDoc(doc(db, collectionName.collectionName, params.editId), {
         title: inputs["friendTitle"],
         name: inputs["friendName"],
-        race: inputs["friendRace"],
         colour: inputs["friendColour"],
+        race: inputs["friendRace"],
         pedigree: inputs["friendPedigree"],
-        description: description,
-        created: Timestamp.now(),
-      };
-      await getDownloadURL(storageRef).then((url) => {
-        newFriend.image = url;
+        modified: Timestamp.now(),
       });
-      await addDoc(collection(db, collectionName), newFriend);
       navigate(-1);
-    } catch {
-      setError("Errore nel salvare l'amico");
+    } catch (err) {
+      setError(err.message);
     }
     setLoading(false);
+  };
+
+  const handleModalShow = () => {
+    setShow(true);
+  };
+
+  const handleModalClose = () => {
+    setShow(false);
+  };
+
+  const handleDelete = async () => {
+    const storage = getStorage();
+    const fileRef = ref(storage, inputs.friendImage);
+    await deleteObject(fileRef)
+    await deleteDoc(doc(db, collectionName.collectionName, params.editId))
+    navigate(-1);
   };
 
   return (
@@ -103,6 +132,7 @@ export default function NewFriend({ collectionName }) {
             id="friendTitle"
             name="friendTitle"
             placeholder="Inserisci titolo"
+            value={inputs.friendTitle}
             required
             onChange={handleInputChange}
           />
@@ -110,10 +140,12 @@ export default function NewFriend({ collectionName }) {
             Immagine
           </label>
           <input
-            type="file"
+            type="text"
             className="form-control input-lg"
             id="friendImage"
-            accept="image/*"
+            accept="friendName"
+            value={inputs.friendImage}
+            readOnly
             required
             onChange={handleImageChange}
           />
@@ -125,6 +157,7 @@ export default function NewFriend({ collectionName }) {
             className="form-control input-lg"
             id="friendName"
             name="friendName"
+            value={inputs.friendName}
             placeholder="Inserisci il nome del micio"
             required
             onChange={handleInputChange}
@@ -138,6 +171,7 @@ export default function NewFriend({ collectionName }) {
             id="friendRace"
             name="friendRace"
             placeholder="Inserisci razza"
+            value={inputs.friendRace}
             onChange={handleInputChange}
           />
           <label htmlFor="friendColor" style={cardBody}>
@@ -149,6 +183,7 @@ export default function NewFriend({ collectionName }) {
             id="friendColour"
             name="friendColour"
             placeholder="Inserisci color"
+            value={inputs.friendColour}
             onChange={handleInputChange}
           />
           <label htmlFor="friendPedigree" style={cardBody}>
@@ -159,6 +194,7 @@ export default function NewFriend({ collectionName }) {
             className="form-control input-lg"
             id="friendPedigree"
             name="friendPedigree"
+            value={inputs.friendPedigree}
             placeholder="Inserisci pedigree"
             onChange={handleInputChange}
           />
@@ -172,25 +208,48 @@ export default function NewFriend({ collectionName }) {
             cols="30"
             placeholder="Descrizione"
             onChange={handleDescriptionChange}
+            value={description}
           />
         </div>
-        <button
-          type="submit"
-          className="btn mt-3"
-          style={buttonStyle}
-          disabled={loading}
-        >
-          Conferma
-        </button>
-        <button
-          type="submit"
-          className="btn mt-3 ms-3"
-          onClick={handleCancel}
-          style={buttonReverseStyle}
-          disabled={loading}
-        >
-          Annulla
-        </button>
+        <div>
+          <button
+            type="submit"
+            className="btn mt-3"
+            style={buttonStyle}
+            disabled={loading}
+          >
+            Conferma
+          </button>
+          <button
+            className="btn mt-3 ms-3"
+            onClick={handleCancel}
+            style={buttonReverseStyle}
+            disabled={loading}
+          >
+            Annulla
+          </button>
+        </div>
+        <div className="col text-center mt-3 mb-3">
+          <Modal
+            show={show}
+            handleDelete={handleDelete}
+            handleClose={handleModalClose}
+          >
+            <p className="mt-3 mb-3" style={cardBody}>
+              Confermi di voler eliminare questo post? <br /> Questa decisione è
+              irreversibile!
+            </p>
+          </Modal>
+          <button
+            type="button"
+            className="btn"
+            onClick={handleModalShow}
+            disabled={loading}
+            style={dangerButtonStyle}
+          >
+            Elimina Post
+          </button>
+        </div>
       </form>
     </div>
   );

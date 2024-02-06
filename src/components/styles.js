@@ -21,8 +21,7 @@ export const cardBody = {
 export const sectionBody = {
   fontFamily: "Indie Flower, cursive",
   textAlign: "center",
-  fontSize: "2rem",
-  padding: "1rem",
+  fontSize: "2rem"
 };
 
 export const sectionLink = {
@@ -38,12 +37,21 @@ export const buttonStyle = {
   color: "white",
 };
 
+export const dangerButtonStyle = {
+  backgroundColor: "#DC3444",
+  fontFamily: "Indie Flower, cursive",
+  textAlign: "center",
+  fontSize: "2rem",
+  color: "white",
+}
+
 export const smallButtonStyle = {
   backgroundColor: "#74877a",
   fontFamily: "Indie Flower, cursive",
   textAlign: "center",
   fontSize: "1.3rem",
   color: "white",
+  margin: 5
 };
 
 export const buttonReverseStyle = {
@@ -51,6 +59,14 @@ export const buttonReverseStyle = {
   fontFamily: "Indie Flower, cursive",
   textAlign: "center",
   fontSize: "2rem",
+  color: "#74877a",
+};
+
+export const smallButtonReverseStyle = {
+  backgroundColor: "white",
+  fontFamily: "Indie Flower, cursive",
+  textAlign: "center",
+  fontSize: "1.3rem",
   color: "#74877a",
 };
 
