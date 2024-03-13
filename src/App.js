@@ -34,6 +34,9 @@ function App() {
         <Route path="/new-kitten" element={
           <PrivateRoute><NewFriend collectionName={'kittens'}/></PrivateRoute>
         }/>
+        <Route path="/edit-kitten/:editId" element={
+          <PrivateRoute><EditFriend collectionName={'kittens'}/></PrivateRoute>
+        }/>
         <Route path="/posts/:postId" element={<PostPage />}/>
         <Route exact path="/posts/" element={<PostsPage />}/>
       </Routes>

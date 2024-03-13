@@ -6,6 +6,7 @@ import {
   sectionHeader,
   subSectionHeader,
   sectionBody,
+  smallButtonStyle
 } from "./styles";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -58,6 +59,15 @@ export default function Kittens() {
                         <br />
                       </p>
                       <p style={sectionBody}>{kitten.data().description}</p>
+                      {user ? (
+                        <Link
+                          to={"/edit-kitten/" + kitten.id}
+                          className="btn mb-5"
+                          style={smallButtonStyle}
+                        >
+                          Modifica
+                        </Link>
+                      ) : null}
                     </div>
                   );
                 })}
