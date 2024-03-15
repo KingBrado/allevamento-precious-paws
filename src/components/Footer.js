@@ -26,8 +26,8 @@ export default function Footer() {
           <div className="col-xs-12 col-md-4 text-center">
             <h4>Contatti</h4>
             <p>
-              Manzi Patrizia: +393273668708 <br />
-              allevamentoprecious.paws@yahoo.com
+              Manzi Patrizia: +393462255109 <br />
+              allevamento.preciouspaws@outlook.it
             </p>
           </div>
           <div className="col-xs-12 col-md-4 mb-3 text-center">
@@ -75,7 +75,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="row" style={{ paddingBottom: "0.2rem" }}>
-          <div className="col text-center">&copy;2023 DoktorPumpkin</div>
+          <div className="col text-center">&copy;2024 DoktorPumpkin</div>
         </div>
       </div>
     </footer>

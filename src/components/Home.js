@@ -6,8 +6,8 @@ import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import Video from "../resources/video_gatto_blog.mp4";
-import Logo from "../resources/precious_paws_logo.jpg";
+import MainPageImage from "../resources/Main Page.jpeg";
+import Logo from "../resources/Scottish & British.png";
 import { sectionHeader, subSectionLink, cardBody, lessRecentLink } from "./styles";
 
 export default function Home() {
@@ -23,17 +23,17 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <video style={{ position: "relative" }} width="100%" autoPlay muted loop>
-        <source src={Video} type="video/mp4" />
-        Your Browser does not support HTML video.
-      </video>
+          <img
+            className="d-block img-fluid mx-auto w-100"
+            src={MainPageImage}
+            alt=""
+          />
       <div className="row  justify-content-center">
-        <div className="col-lg-6 col-xs-6">
+        <div className="col-lg-6 col-xs-6 mt-4">
           <img
             className="d-block img-fluid mx-auto w-100"
             src={Logo}
             alt=""
-            style={{ borderRadius: "80%" }}
           />
         </div>
       </div>
