@@ -1,13 +1,76 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { Link } from "react-router-dom";
-import { sectionHeader, sectionBody, sectionLink } from "./styles";
+import { sectionHeader, sectionBody, buttonStyle, buttonReverseStyle } from "./styles";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs, query, orderBy, doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import Editor from "react-simple-wysiwyg";
+import DOMPurify from "dompurify";
+import "./styles.css";
 
 export default function AboutUs() {
+  const [user, setUser] = useState(false);
+  const [content, setContent] = useState("");
+  const [editable, setEditable] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [docId, setDocId] = useState(null);
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(!!u);
+    });
+    return unsubscribe;
+  }, [auth]);
+
+  useEffect(() => {
+    getDocs(query(collection(db, "aboutus"), orderBy("created"))).then(
+      async (querySnapshot) => {
+        if (querySnapshot.empty) {
+          setContent("");
+          return;
+        }
+        let doc = querySnapshot.docs[0];
+        setContent(doc.data().paragraph);
+        setDocId(doc.id);
+      }
+    );
+  }, []);
+
+
+  const toggleEdit = (e) => {
+    e.preventDefault();
+    setEditable(!editable);
+  }
+
+  const onEditorChange = (e) => {
+    setContent(e.target.value);
+  }
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      setError("");
+      await updateDoc(doc(db, "aboutus", docId), {
+        paragraph: content,
+        created: new Date()
+      });
+      setEditable(false);
+    } catch (err) {
+      setError("Errore durante il salvataggio. Riprova.");
+      console.error("Error adding document: ", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       <Navbar />
+
       <div className="container fluid">
         <div className="row justify-content-center ">
           <div className="col m-auto">
@@ -16,29 +79,18 @@ export default function AboutUs() {
         </div>
         <div className="row justify-content-center">
           <div className="col-xs-12 col-lg-8 m-auto">
-            <p style={sectionBody}>
-              Benvenuti sulla nostra pagina web, molti si chiederanno chi siamo
-              ed ecco perché ci fa molto piacere presentarci. Siamo una
-              famiglia, una famiglia come tutte le altre, che ha deciso di
-              trasformare una passione in qualcosa di più. Siamo una coppia
-              appassionata di animali, abbiamo sempre avuto cani e gatti,
-              abbiamo fatto volontariato e ne abbiamo salvati tanti dalle
-              strade. Abbiamo sempre rispettato gli allevatori, quelli seri che
-              rispettano i regolamenti, che seguono i loro cuccioli e li
-              accompagnano finché non sono pronti per lasciare le loro case. Ma
-              quando si ama un cucciolo la gioia più grande è ricevere le
-              meravigliose foto di quando crescono e vivono nelle loro famiglie,
-              e vedere come sono amati dona un’emozione infinita. Ebbene a un
-              certo punto abbiamo deciso di trasformare la nostra passione in
-              qualcosa di più con questa meravigliosa razza di cui ci siamo
-              innamorati. Abbiamo scelto ogni cucciolo da allevamenti seri e li
-              abbiamo seguiti fin da piccoli, dalla crescita al loro arrivo.
-              Abbiamo tre splendidi bambini a cui abbiamo insegnato ad amare e
-              rispettare gli animali, tutti gli animali e i nostri gatti
-              crescono e vivono in mezzo a noi, giocano con i bambini, ricevono
-              coccole, dormono in giro sul divano comodo o sui loro cuscinoni.
-            </p>
-            <p style={sectionBody}>
+            {error && (
+              <div class="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
+            {user ? (
+              editable ? (
+                <Editor containerProps={{ style: { fontFamily: "Indie Flower, cursive", fontSize: "1.5rem" } }} value={content} onChange={onEditorChange} />
+              ) : <div className="about-content" style={sectionBody} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
+            ) : <div className="about-content" style={sectionBody} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />}
+
+            {/* <p style={sectionBody}>
               {" "}
               Ci auguriamo che questa grande famiglia cresca sempre di più
               insieme alle tante famiglie che decideranno di prendere uno dei
@@ -48,7 +100,27 @@ export default function AboutUs() {
                 I nostri mici
               </Link>
               !
-            </p>
+            </p> */}
+            <div className="row justify-content-center">
+              <div className="col mt-3 m-auto text-center">
+                {user ? (
+                  editable ? (
+                    <>
+                      <button className="btn" style={buttonStyle} onClick={handleSave} disabled={loading}>
+                        Salva
+                      </button>
+                      <button className="btn" style={buttonReverseStyle} onClick={toggleEdit} disabled={loading}>
+                        Annulla
+                      </button>
+                    </>
+                  ) : (
+                    <button className="btn" style={buttonStyle} onClick={toggleEdit}>
+                      Modifica
+                    </button>
+                  )
+                ) : null}
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import fblogo from "../resources/f_logo_RGB-Blue_58.png";
@@ -8,9 +8,14 @@ export default function Footer() {
   const [user, setUser] = useState(false);
   const [error, setError] = useState("");
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    setUser(user);
-  });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(!!u);
+    });
+    return unsubscribe;
+  }, [auth]);
+
   async function handleLogout() {
     setError("");
     try {
@@ -75,7 +80,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="row" style={{ paddingBottom: "0.2rem" }}>
-          <div className="col text-center">&copy;2024 DoktorPumpkin</div>
+          <div className="col text-center">&copy;{new Date().getFullYear()} DoktorPumpkin</div>
         </div>
       </div>
     </footer>
