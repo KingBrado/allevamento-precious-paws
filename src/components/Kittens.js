@@ -17,9 +17,12 @@ export default function Kittens() {
   const [kittenDesc, setKittenDesc] = useState([]);
   const [user, setUser] = useState(false);
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    setUser(user);
-  });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(!!u);
+    });
+    return unsubscribe;
+  }, [auth]);
 
   useEffect(() => {
     getDocs(query(collection(db, 'kittens'), orderBy("created"))).then(

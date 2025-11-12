@@ -18,9 +18,12 @@ export default function OurCats() {
   const [user, setUser] = useState(false);
   const auth = getAuth();
 
-  onAuthStateChanged(auth, (user) => {
-    setUser(user);
-  });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(!!u);
+    });
+    return unsubscribe;
+  }, [auth]);
 
   useEffect(() => {
 
